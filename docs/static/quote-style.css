@@ -1,0 +1,136 @@
+@page {
+  size: A4;
+  margin-top: 2mm;
+}
+
+body {
+    margin: 0px;
+    background: #fff;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    
+  }
+.container{
+  width: 90%;
+  margin: 0 auto;
+}
+  
+.header {
+  font-size: 50px;
+  text-align: right;
+  margin-bottom: 10px;
+}
+td {
+    word-wrap: break-word;
+}
+
+#first-section, #second-section, .meta, #summary, #notes {
+  p {
+    margin: 2px;
+  }
+  margin-bottom: 20px;
+}
+
+
+#first-section {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+} 
+#company-name{
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+#company-details{
+  width: 60%;
+  font-size: 14px;
+}
+#quote-info1 {
+  width: 30%;
+  font-size: 14px;
+  text-align: right;
+}
+#quote-info2 {
+  font-size: 14px;
+  text-align: left;
+}
+
+#second-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#notes-header, #recipient-details-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#notes {
+  width: 70%;
+  font-size: 14px;
+}
+
+#recipient-details {
+  width: 30%;
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+#quote-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1px;
+}
+#quote-table th, #quote-table td {
+  border: 1px solid #999;
+  padding: 5px;
+  font-size: 14px;
+}
+
+#quote-table th {
+  background-color: #eee;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+#description-th {
+  width: 70%;
+}
+#quantity-th, #unit-price-th, #total-th {
+  width: 10%;
+  text-align: right;
+}
+
+#summary{
+  display: flex;
+  float: right;
+}
+
+#summary-table, #summary-table th, #summary-table td {
+  text-align: right;
+  font-weight: bold;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+  border-bottom: 1px solid #999;
+  border-collapse: collapse;
+  padding: 5px;
+}
+#iva, #total, #subtotal {
+  text-align: left;
+}
+
+#footer {
+  font-size: 12px;
+  width: 90%;
+  position: absolute;
+  bottom: 25px;
+  text-align: center;
+  margin-top: 150px;
+  font-size: 0.9em;
+  color: #555;
+}
