@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Formulario de Cotización</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body onload="createTable()">
+      <div class="container">
+        <h1>Datos de Cotización</h1>
+        <div class="input-container">
+          <input type="text" id="name-field" placeholder="Nombre del Cliente">
+          <input type="text" id="company-field" placeholder="Empresa">
+          <textarea id="note-field" placeholder="Nota"></textarea>
+        </div>  
+        <div class="container">
+          <button onclick="addRow()">Añadir Fila </button>
+        </div>
+
+        <table id="form-table">
+            <!-- row will be dinamically generated here  -->
+        </table>
+       
+        <div class="container">
+          <button id="create-file" onclick="displayData();saveAndGo()">Crear Cotizacion</button>
+        </div>   
+        <script src="create-form-table.js"></script>
+      </div>
+  </body>
+</html>
