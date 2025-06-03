@@ -1,125 +1,141 @@
+@page {
+  size: A4;
+  margin-top: 2mm;
+}
+
 body {
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #807e7e5f;
-  color: #333;
-  margin: 0;
-  padding: 20px;
-}
-
+    margin: 0px;
+    background: #fff;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    
+  }
 .container{
-  width: 60%;
+  width: 90%;
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
 }
-
-h1 {
-margin-top: 0;
-text-align: center;
+  
+.header {
+  font-size: 50px;
+  text-align: right;
+  margin-bottom: 10px;
 }
-
 td {
     word-wrap: break-word;
 }
 
-.input-container{
-  font-size: 16px;
-  width: 80%;
-  margin: 0 auto;  
-  display: grid
+#first-section, #second-section, .meta, #summary, #notes {
+  p {
+    margin: 2px;
+  }
+  margin-bottom: 20px;
 }
 
-#note-field {
 
-width: 100%;
-height: 100px;
-resize: none;
-}
-
-#name-field, #note-field, #company-field {
-font-family: 'Courier New', Courier, monospace;
-width: 100%;
-padding: 10px;
-font-size: 16px;
-margin-right: 10px;
-border-radius: 5px;
-border: 1px solid #ccc;
-margin-bottom: 5px;
-}
-
-#name-field:focus, #note-field:focus #company-field:focus {
-border-color: #66afe9;
-outline: 0;
--webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
-}
-
-button {
-font-family: 'Courier New', Courier, monospace;
-margin: 10px;
-padding: 10px 20px;
-font-size: 16px;
-cursor: pointer;
-background-color: #4CAF50;
-color: white;
-border: none;
-border-radius: 4px;
-}
-
-.checkbox-group {
+#first-section {
+  width: 110%;
+  margin-bottom: 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+} 
+#company-name{
+  font-size: 30px;
+  font-weight: bold;
   margin-bottom: 5px;
-
-  background-color: white;
+}
+#company-details{
+  width: 60%;
+  font-size: 14px;
+}
+#quote-info1 {
+  width: 20%;
+  font-size: 14px;
+  text-align: right;
+  float: right;
+}
+#quote-info2 {
+  width: 30%;
+  font-size: 14px;
+  text-align: left;
+  margin-right: 0px;
+  float: right;
 }
 
-/* Checkbox input style */
-#include-iva-checkbox {
-  margin-right: 10px;
-  transform: scale(1.2);
-  accent-color: #66afe9;
-}
-
-button:hover {
-background-color: #3e8e41;
-}
-
-table {
-  border-collapse: collapse;
+#second-section {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-#quote-table {
-  margin-top: 30px;
+#notes-header, #recipient-details-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
-th {
-  background-color: #f2f2f2a0;
-  padding: 10px;
+
+#notes {
+  width: 70%;
+  font-size: 14px;
+}
+
+#recipient-details {
+  width: 30%;
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+#quote-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1px;
+}
+#quote-table th, #quote-table td {
+  border: 1px solid #999;
+  padding: 5px;
+  font-size: 14px;
+}
+
+#quote-table th {
+  background-color: #eee;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+#description-th {
+  width: 70%;
+}
+#quantity-th, #unit-price-th, #total-th {
+  width: 10%;
+  text-align: right;
+}
+
+#summary{
+  display: flex;
+  float: right;
+}
+
+#summary-table, #summary-table th, #summary-table td {
+  text-align: right;
+  font-weight: bold;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+  border-bottom: 1px solid #999;
+  border-collapse: collapse;
+  padding: 5px;
+}
+#iva, #total, #subtotal {
   text-align: left;
 }
 
-th, td {
-  border: 1px solid black;
-  padding: 8px;
-  text-align: left;
-}
-
-.editable-cell {
-  background-color: #f2f2f2;
-  outline: none
-}
-
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
--webkit-appearance: none;
-margin: 0;
+#footer {
+  font-size: 12px;
+  width: 90%;
+  position: absolute;
+  bottom: 25px;
+  text-align: center;
+  margin-top: 150px;
+  font-size: 0.9em;
+  color: #555;
 }
