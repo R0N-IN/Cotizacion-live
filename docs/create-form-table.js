@@ -1,88 +1,121 @@
-let tableData =[]
 
-const table = document.getElementById("form-table");
-const columns = 3;
-const clientNameField = document.getElementById("name-field");
-const noteField = document.getElementById("note-field");
-const clientCompanyName = document.getElementById("company-field");
-let rows = 1;
+const rows = parseInt(localStorage.getItem('rows'));
+const tableData = JSON.parse(localStorage.getItem('tableData'));
+const clientNameField = localStorage.getItem('clientNameField');
+const noteField = localStorage.getItem('noteField');
+const ivaCheckbox = localStorage.getItem('include-iva');
+const IVA_RATE= 0.16; // 16% IVA rate
+let clientCompanyName = localStorage.getItem('clientCompanyName');
 
-function createTable(){    
-    // Clear existing table data
-    while(table.firstChild) {
-        table.removeChild(table.firstChild);
+
+
+function getTotalColumnData() {
+    let total = 0;
+    let totalColumn = []
+    //Calculate total for each row 
+    for (let i = 0; i < rows; i++) {
+        const price = parseFloat(tableData[i][2]) || 0;
+        const quantity = parseFloat(tableData[i][1]) || 0;
+        totalColumn.push(price * quantity); 
+        // Add to final total
+        total += price * quantity;
     }
-    
-    let headers = ["Descripcion", "Cantidad", "Precio Unitario"];
+    return [totalColumn, total.toFixed(2)];
+}
 
-    // Create thead and header row
-    let thead = document.createElement("thead");
-    let headerRow = document.createElement("tr");
+function fillQuote() {
+    changeDocumentType();
+    fillQuoteDetails();   
+    const subTotal = fillTable();
+    fillSummary(subTotal);
+    // Fill the quote info
+    fillRecipientDetails();
+}
 
-    for (let header of headers) {
-        let th = document.createElement("th");
-        th.setAttribute("class", "header-cell");
-        if(header === "Descripcion") {
-            th.setAttribute("width", "80%");
-        }else{
-            th.setAttribute("width", "10%"); 
-        }
-        let headerText = document.createElement("span");
-        headerText.setAttribute("class", "header-text");
-        headerText.textContent = header;
-        th.appendChild(headerText);
-        headerRow.appendChild(th);
-    }
+function changeDocumentType() {
+    const documentType = localStorage.getItem('documentType');
+    document.getElementById('document-type').textContent = documentType
+}
 
-    // Append the header row to the thead, and thead to the table
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    tbody = document.createElement("tbody");
+function fillTable() {
+    const columns = 3; 
+    const totalData = getTotalColumnData();
+    const totalColumn = totalData[0];
+    const subTotal = totalData[1];
+
+    const table = document.getElementById('quote-table');
+    const tbody = document.createElement('tbody');
     table.appendChild(tbody);
-
-    // Call your function to add a row (if needed)
-    addRow();
-}
-
-function addRow(){
-    let rowData = [];
-    let row = document.createElement("tr");
-    for (let j = 0; j < columns; j++) {
-        let cell = document.createElement("td");
-        cell.setAttribute("contenteditable", "true");
-        cell.setAttribute("class", "editable-cell");
-        cell.addEventListener("input", updateCell);
-        rowData.push("");
-        row.appendChild(cell);
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+        row.setAttribute('data-static', 'true');
+        row.setAttribute('class', 'text');
+        for (let j = 0; j < columns; j++) {
+            const cell = document.createElement('td');
+            cell.setAttribute('data-static', 'true');
+            cell.setAttribute('class', 'text');
+            cell.textContent = tableData[i][j];
+            row.appendChild(cell);
+        }
+        // Add a cell for the total price
+        const totalCell = document.createElement('td');
+        totalCell.setAttribute('data-static', 'true');
+        totalCell.setAttribute('class', 'text');
+        totalCell.textContent = totalColumn[i];
+        row.appendChild(totalCell);
+        tbody.appendChild(row);
     }
-    tbody.appendChild(row);
-    tableData.push(rowData);
-    rows++;
+    return subTotal
 }
 
-function updateCell(event) {
-    let rowIndex = event.target.parentNode.rowIndex - 1;
-    let columnIndex = event.target.cellIndex;
-    let value = event.target.textContent.trim();
-    updateData(rowIndex, columnIndex, value);
+function fillSummary(subTotal) { 
+    document.getElementById('subtotal').textContent = subTotal;
+    let iva = 0;
+
+    if (ivaCheckbox === 'true') {
+        document.getElementById('iva-rate').textContent = 'IVA (16%): $';
+        iva = subTotal * IVA_RATE // 16% IVA
+    }else {
+        document.getElementById('iva-rate').textContent = 'IVA (0%): $';
+    }
+    document.getElementById('iva').textContent = iva.toFixed(2);
+    document.getElementById('total').textContent = (parseFloat(subTotal) + iva).toFixed(2);
 }
 
-function updateData(row, col, value) {
-    tableData[row][col] = value;
+
+function fillRecipientDetails() {
+    if (clientCompanyName === null || clientCompanyName === undefined || clientCompanyName === '') {
+        clientCompanyName = '';
+    }
+    document.getElementById('client-company-name').textContent = clientCompanyName;
+    document.getElementById('client-name').textContent = clientNameField;
+    document.getElementById('notes').textContent = noteField;
 }
 
-function saveAndGo() {
-    localStorage.clear();
-    localStorage.setItem("tableData", JSON.stringify(tableData));
-    localStorage.setItem("rows", rows - 1);
-    localStorage.setItem("clientNameField", clientNameField.value);
-    localStorage.setItem("noteField", noteField.value);
-    localStorage.setItem("clientCompanyName", clientCompanyName.value);
-    localStorage.setItem("include-iva", document.getElementById("include-iva-checkbox").checked);
-    window.open("static/quote.html", "_blank"); 
+function dayOfTheYear(date) {
+  return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+}
+function minuteOfTheDay(date) {
+  return date.getHours() * 60 + date.getMinutes();
 }
 
-function displayData() {
-    console.log(tableData);
-    console.log(table);
+function createClientID() {
+    const len = clientCompanyName.length;
+    const firstThird = clientCompanyName.slice(0, len / 3).toUpperCase();
+    const lastThird = clientCompanyName.slice(len - len / 3).toUpperCase();
+
+    return firstThird + 'XXXX' + lastThird;
 }
+
+function fillQuoteDetails() {
+    const today = new Date()
+    document.getElementById('quote-number').textContent = "CT" + dayOfTheYear(today) + minuteOfTheDay(today);
+    document.getElementById('date').textContent = today.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    if( clientCompanyName === null || clientCompanyName === undefined || clientCompanyName === '') {
+        document.getElementById('id-client').textContent = 'XXXXXXX';
+    }else {
+        document.getElementById('id-client').textContent = createClientID();
+    }
+}
+
+
