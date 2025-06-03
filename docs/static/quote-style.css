@@ -125,6 +125,7 @@ td {
   border-collapse: collapse;
   padding: 5px;
 }
+
 #iva, #total, #subtotal {
   text-align: left;
 }
