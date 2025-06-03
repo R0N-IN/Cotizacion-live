@@ -1,141 +1,163 @@
-@page {
-  size: A4;
-  margin-top: 2mm;
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #807e7e5f;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  flex-wrap: wrap;
+  display: grid;
+  flex-direction: column;
+  align-items: center;
 }
 
-body {
-    margin: 0px;
-    background: #fff;
-    color: #333;
-    font-family: 'Courier New', Courier, monospace;
-    
-  }
 .container{
-  width: 90%;
+  width: 70%;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
-  
-.header {
-  font-size: 50px;
-  text-align: right;
-  margin-bottom: 10px;
+
+h1 {
+margin-top: 0;
+text-align: center;
 }
+
 td {
     word-wrap: break-word;
 }
 
-#first-section, #second-section, .meta, #summary, #notes {
-  p {
-    margin: 2px;
-  }
-  margin-bottom: 20px;
+.input-container{
+  font-size: 16px;
+  width: 80%;
+  margin: 0 auto;  
+  display: grid;
 }
 
+#note-field {
 
-#first-section {
-  width: 110%;
-  margin-bottom: 20px;
+width: 100%;
+height: 100px;
+resize: none;
+}
+
+#name-field, #note-field, #company-field {
+font-family: 'Courier New', Courier, monospace;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+}
+
+#name-field:focus, #note-field:focus #company-field:focus {
+border-color: #66afe9;
+outline: 0;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+
+button {
+font-family: 'Courier New', Courier, monospace;
+margin: 10px;
+padding: 10px 20px;
+font-size: 16px;
+cursor: pointer;
+background-color: #4CAF50;
+color: white;
+border: none;
+border-radius: 4px;
+}
+
+.checkbox-group {
   display: flex;
   justify-content: space-between;
   align-items: center;
-} 
-#company-name{
-  font-size: 30px;
-  font-weight: bold;
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  border: 1px solid #ccc;
   margin-bottom: 5px;
-}
-#company-details{
-  width: 60%;
-  font-size: 14px;
-}
-#quote-info1 {
-  width: 20%;
-  font-size: 14px;
-  text-align: right;
-  float: right;
-}
-#quote-info2 {
-  width: 30%;
-  font-size: 14px;
-  text-align: left;
-  margin-right: 0px;
-  float: right;
+  background-color: white;
+  flex-wrap: wrap; 
+  border-radius: 5px;
+  gap: 10px;
 }
 
-#second-section {
-  width: 100%;
+.checkbox-wrapper,
+.dropdown-wrapper {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 5px; 
 }
 
-#notes-header, #recipient-details-header {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 10px;
+#include-iva-checkbox {
+  transform: scale(1.2);
+  accent-color: #66afe9;
 }
 
-#notes {
-  width: 70%;
+
+#document-type-dropdown {
+  padding: 8px 12px;
   font-size: 14px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  min-width: auto;
 }
 
-#recipient-details {
-  width: 30%;
-  font-size: 14px;
-  margin-left: 20px;
+@media (max-width: 480px) {
+  .checkbox-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dropdown-wrapper {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+  #document-type-dropdown {
+    min-width: auto;
+    box-sizing: border-box;
+  }
 }
 
-#quote-table{
-  width: 100%;
+
+
+button:hover {
+background-color: #3e8e41;
+}
+
+table {
   border-collapse: collapse;
-  margin-bottom: 1px;
-}
-#quote-table th, #quote-table td {
-  border: 1px solid #999;
-  padding: 5px;
-  font-size: 14px;
-}
-
-#quote-table th {
-  background-color: #eee;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-}
-#description-th {
-  width: 70%;
-}
-#quantity-th, #unit-price-th, #total-th {
-  width: 10%;
-  text-align: right;
-}
-
-#summary{
-  display: flex;
-  float: right;
-}
-
-#summary-table, #summary-table th, #summary-table td {
-  text-align: right;
-  font-weight: bold;
-  font-size: 16px;
   width: 100%;
-  margin-top: 10px;
-  border-bottom: 1px solid #999;
-  border-collapse: collapse;
-  padding: 5px;
 }
-#iva, #total, #subtotal {
+
+#quote-table {
+  margin-top: 30px;
+}
+th {
+  background-color: #f2f2f2a0;
+  padding: 10px;
   text-align: left;
 }
 
-#footer {
-  font-size: 12px;
-  width: 90%;
-  position: absolute;
-  bottom: 25px;
-  text-align: center;
-  margin-top: 150px;
-  font-size: 0.9em;
-  color: #555;
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+.editable-cell {
+  background-color: #f2f2f2;
+  outline: none
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
 }
