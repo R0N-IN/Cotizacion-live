@@ -3,7 +3,7 @@ const rows = parseInt(localStorage.getItem('rows'));
 const tableData = JSON.parse(localStorage.getItem('tableData'));
 const clientNameField = localStorage.getItem('clientNameField');
 const noteField = localStorage.getItem('noteField');
-const ivaCheckbox = localStorage.getItem('include-iva');
+const ivaCheckbox = localStorage.getItem('includeIva');
 const IVA_RATE= 0.16; // 16% IVA rate
 let clientCompanyName = localStorage.getItem('clientCompanyName');
 
