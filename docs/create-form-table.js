@@ -110,7 +110,7 @@ function saveAndGo() {
     localStorage.setItem("clientCompanyName", clientCompanyName.value);
     localStorage.setItem("includeIva",ivaStatus.checked);
     localStorage.setItem("documentType", documentTypeDropdown.value);
-    window.open("/static/quote.html", "_blank"); 
+    window.open("static/quote.html", "_blank"); 
 }
 
 function displayData() {
