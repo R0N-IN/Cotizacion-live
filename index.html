@@ -37,8 +37,8 @@ button.del{color:var(--danger)}
 .foot{margin-top:auto;padding-top:28px;font-size:11px;color:#666;text-align:center}
 .foot p{margin:4px 0}
 .muted{color:#777}
-@page{size:A4;margin:12mm}
-@media print{body{background:#fff}.app{display:block;padding:0}.edit,.noprint{display:none!important}.preview{position:static}.sheet{border:0;padding:0;min-height:272mm}}
+@page{size:A4;margin:0}
+@media print{body{background:#fff;margin:0}.app{display:block;padding:0;max-width:none}.edit,.noprint{display:none!important}.preview{position:static}.sheet{border:0;border-radius:0;padding:14mm;min-height:296mm;box-sizing:border-box}}
 </style>
 </head>
 <body>
@@ -160,7 +160,7 @@ function render(){
   $('pTot').textContent = money(sub + tax);
   $('pNotes').textContent = $('notes').value;
   const v = +$('valid').value;
-  $('pValid').textContent = $('type').value === 'Cotización' && v ? ' Vigencia de la cotización: ' + v + ' días.' : '';
+  $('pValid').textContent = $('type').value === 'Cotización' && v ? 'Vigencia de la cotización: ' + v + ' días.' : '';
   document.title = $('type').value + ' ' + folio;
   save();
 }
