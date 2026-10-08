@@ -25,18 +25,25 @@ button.del{color:var(--danger)}
 .bar{display:flex;gap:8px;flex-wrap:wrap}
 .toggle{display:flex;align-items:center;gap:8px;margin-top:10px}.toggle input{width:auto}
 .preview{position:sticky;top:20px;align-self:start}
-.sheet{background:#fff;color:#222;border:1px solid var(--line);border-radius:6px;padding:28px;font-size:13px;min-height:560px}
-.sheet h3{margin:0;font-size:22px}.sheet .top{display:flex;justify-content:space-between;gap:16px}
-.sheet .doc{font-size:30px;font-weight:700;text-align:right}
-.sheet table{width:100%;border-collapse:collapse;margin:18px 0}
-.sheet th{background:#eee;text-align:left}.sheet th,.sheet td{border:1px solid #bbb;padding:5px 7px}
-.sheet .n{text-align:right;white-space:nowrap}
-.sheet .sum{margin-left:auto;width:240px}.sum div{display:flex;justify-content:space-between;padding:3px 0}
-.sum .t{font-weight:700;border-top:2px solid #222;margin-top:4px;padding-top:6px}
-.sheet{display:flex;flex-direction:column}
-.foot{margin-top:auto;padding-top:28px;font-size:11px;color:#666;text-align:center}
-.foot p{margin:4px 0}
-.muted{color:#777}
+.sheet{display:flex;flex-direction:column;background:#fff;color:#333;border:1px solid var(--line);border-radius:6px;padding:28px;min-height:640px;font-family:'Courier New',Courier,monospace;font-size:14px}
+.sheet p{margin:2px 0}
+.sheet .doc{font-size:50px;font-weight:700;text-align:right;line-height:1.1;margin-bottom:10px}
+.sheet .first{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.sheet .co{width:60%}
+.sheet .co h1{font-size:42px;font-weight:700;margin:0 0 5px;line-height:1.1}
+.sheet .info{display:flex;gap:14px}
+.sheet .info .l{text-align:right}.sheet .info .v{text-align:left}
+.sheet .second{display:flex;justify-content:space-between;margin-bottom:20px}
+.sheet h4{font-size:16px;font-weight:700;margin:0 0 10px}
+.sheet .notes{width:70%}
+.sheet .to{width:30%;margin-left:20px}
+.sheet table{width:100%;border-collapse:collapse;margin-bottom:1px}
+.sheet th,.sheet td{border:1px solid #999;padding:5px;font-size:14px;text-align:left;word-wrap:break-word}
+.sheet th{background:#eee;font-size:16px;text-align:center}
+.sheet .d{width:60%}.sheet .n{text-align:right;white-space:nowrap}
+.sheet .sum{width:300px;margin:10px 0 0 auto;font-weight:700;font-size:16px}
+.sheet .sum div{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #999;padding:5px}
+.sheet .foot{margin-top:auto;padding-top:28px;font-size:12px;color:#555;text-align:center}
 @page{size:A4;margin:0}
 @media print{body{background:#fff;margin:0}.app{display:block;padding:0;max-width:none}.edit,.noprint{display:none!important}.preview{position:static}.sheet{border:0;border-radius:0;padding:14mm;min-height:296mm;box-sizing:border-box}}
 </style>
@@ -67,18 +74,29 @@ button.del{color:var(--danger)}
 
   <div class="preview">
     <div class="sheet" id="sheet">
-      <div class="top">
-        <div><h3 id="pName"></h3><div id="pAddr" class="muted"></div><div id="pContact" class="muted"></div></div>
-        <div><div class="doc" id="pType"></div><div class="n muted" id="pMeta"></div></div>
+      <div class="doc" id="pType"></div>
+      <div class="first">
+        <div class="co">
+          <h1 id="pName"></h1>
+          <p id="pAddr"></p>
+          <p id="pTel"></p>
+          <p id="pMail"></p>
+        </div>
+        <div class="info">
+          <div class="l"><p><strong>Nº DE ORDEN:</strong></p><p><strong>FECHA:</strong></p><p><strong>ID.CLIENTE:</strong></p></div>
+          <div class="v"><p id="pFolio"></p><p id="pDate"></p><p id="pCid"></p></div>
+        </div>
       </div>
-      <p><strong>Para:</strong> <span id="pClient"></span><br><span id="pCompany" class="muted"></span></p>
-      <table><thead><tr><th>Descripción</th><th class="n">Cant.</th><th class="n">P. unitario</th><th class="n">Importe</th></tr></thead><tbody id="pRows"></tbody></table>
+      <div class="second">
+        <div class="notes"><h4>Notas:</h4><p id="pNotes"></p></div>
+        <div class="to"><h4>Para:</h4><p><strong id="pClient"></strong></p><p id="pCompany"></p></div>
+      </div>
+      <table><thead><tr><th class="d">Descripción</th><th>Cantidad</th><th>Importe</th><th>Total</th></tr></thead><tbody id="pRows"></tbody></table>
       <div class="sum">
-        <div><span>Subtotal</span><span id="pSub"></span></div>
+        <div><span>SUBTOTAL:</span><span id="pSub"></span></div>
         <div><span id="pIvaL"></span><span id="pIva"></span></div>
-        <div class="t"><span>Total</span><span id="pTot"></span></div>
+        <div><span>TOTAL:</span><span id="pTot"></span></div>
       </div>
-      <p id="pNotes"></p>
       <div class="foot">
         <p>Favor de verificar que la información sea correcta y cumple con lo requerido para completar la compra. Comunicarse por correo a <strong>mchavezguzm@gmail.com</strong> con Manuel Chavez proporcionando sus datos de facturación.</p>
         <p><strong>GRACIAS POR SU CONFIANZA</strong></p>
@@ -128,6 +146,12 @@ function nextFolio(){
   return 'CT-' + d.getFullYear() + '-' + String(n).padStart(4,'0');
 }
 
+function clientId(){
+  const c = $('company').value.trim();
+  if(!c) return 'XXXXXXX';
+  const n = Math.max(1, Math.floor(c.length/3));
+  return c.slice(0,n).toUpperCase() + 'XXXX' + c.slice(-n).toUpperCase();
+}
 function renderItems(){
   $('items').innerHTML = items.map((it,i) => `
     <div class="item">
@@ -145,10 +169,13 @@ function render(){
   if(!folio){ folio = nextFolio(); }
   $('pName').textContent = COMPANY.name;
   $('pAddr').textContent = COMPANY.addr;
-  $('pContact').textContent = 'Tel: ' + COMPANY.tel + ' · ' + COMPANY.mail;
+  $('pTel').textContent = 'Tel: ' + COMPANY.tel;
+  $('pMail').textContent = 'Email: ' + COMPANY.mail;
   $('pType').textContent = $('type').value;
-  $('pMeta').innerHTML = folio + '<br>' + new Date().toLocaleDateString('es-MX');
-  $('pClient').textContent = $('client').value || '—';
+  $('pFolio').textContent = folio;
+  $('pDate').textContent = new Date().toLocaleDateString('es-MX', {year:'numeric', month:'2-digit', day:'2-digit'});
+  $('pCid').textContent = clientId();
+  $('pClient').textContent = $('client').value;
   $('pCompany').textContent = $('company').value;
   $('pRows').innerHTML = items.filter(it => it.d || +it.p).map(it => {
     const q = +it.q||0, p = +it.p||0;
