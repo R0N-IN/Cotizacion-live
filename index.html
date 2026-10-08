@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotización</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1f2933;--mute:#6b7280;--line:#e2e5ea;--acc:#2563eb;--danger:#dc2626}
+@media (prefers-color-scheme:dark){:root{--bg:#111418;--card:#1b2027;--ink:#e6e8eb;--mute:#9aa3ad;--line:#2d343d}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.app{display:grid;grid-template-columns:minmax(320px,480px) 1fr;gap:20px;padding:20px;max-width:1400px;margin:auto}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+h1{font-size:20px;margin:0 0 14px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:0 0 10px}
+label{display:block;font-size:12px;color:var(--mute);margin:8px 0 3px}
+input,textarea,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{display:grid;grid-template-columns:1fr 64px 96px 28px;gap:6px;margin-bottom:6px}
+.item button{padding:0}
+button{padding:8px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);cursor:pointer;font:inherit}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+button.del{color:var(--danger)}
+.bar{display:flex;gap:8px;flex-wrap:wrap}
+.toggle{display:flex;align-items:center;gap:8px;margin-top:10px}.toggle input{width:auto}
+.preview{position:sticky;top:20px;align-self:start}
+.sheet{background:#fff;color:#222;border:1px solid var(--line);border-radius:6px;padding:28px;font-size:13px;min-height:560px}
+.sheet h3{margin:0;font-size:22px}.sheet .top{display:flex;justify-content:space-between;gap:16px}
+.sheet .doc{font-size:30px;font-weight:700;text-align:right}
+.sheet table{width:100%;border-collapse:collapse;margin:18px 0}
+.sheet th{background:#eee;text-align:left}.sheet th,.sheet td{border:1px solid #bbb;padding:5px 7px}
+.sheet .n{text-align:right;white-space:nowrap}
+.sheet .sum{margin-left:auto;width:240px}.sum div{display:flex;justify-content:space-between;padding:3px 0}
+.sum .t{font-weight:700;border-top:2px solid #222;margin-top:4px;padding-top:6px}
+.sheet{display:flex;flex-direction:column}
+.foot{margin-top:auto;padding-top:28px;font-size:11px;color:#666;text-align:center}
+.foot p{margin:4px 0}
+.muted{color:#777}
+@page{size:A4;margin:12mm}
+@media print{body{background:#fff}.app{display:block;padding:0}.edit,.noprint{display:none!important}.preview{position:static}.sheet{border:0;padding:0;min-height:272mm}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="edit">
+    <h1>Cotización</h1>
+    <div class="card"><h2>Documento</h2>
+      <div class="row2">
+        <div><label>Tipo</label><select id="type"><option>Cotización</option><option>Nota</option></select></div>
+        <div><label>Vigencia (días)</label><input id="valid" type="number" min="0" value="15"></div>
+      </div>
+      <label>Cliente</label><input id="client" placeholder="Nombre del cliente">
+      <label>Empresa</label><input id="company" placeholder="Empresa">
+      <label>Notas</label><textarea id="notes" rows="3"></textarea>
+      <div class="toggle"><input type="checkbox" id="iva" checked><label style="margin:0">Incluir IVA (16%)</label></div>
+    </div>
+    <div class="card"><h2>Conceptos</h2>
+      <div id="items"></div>
+      <div class="bar"><button class="pri" id="add">+ Añadir concepto</button></div>
+    </div>
+    <div class="bar noprint">
+      <button class="pri" onclick="window.print()">Imprimir / PDF</button>
+      <button id="reset" class="del">Nuevo</button>
+    </div>
+  </div>
+
+  <div class="preview">
+    <div class="sheet" id="sheet">
+      <div class="top">
+        <div><h3 id="pName"></h3><div id="pAddr" class="muted"></div><div id="pContact" class="muted"></div></div>
+        <div><div class="doc" id="pType"></div><div class="n muted" id="pMeta"></div></div>
+      </div>
+      <p><strong>Para:</strong> <span id="pClient"></span><br><span id="pCompany" class="muted"></span></p>
+      <table><thead><tr><th>Descripción</th><th class="n">Cant.</th><th class="n">P. unitario</th><th class="n">Importe</th></tr></thead><tbody id="pRows"></tbody></table>
+      <div class="sum">
+        <div><span>Subtotal</span><span id="pSub"></span></div>
+        <div><span id="pIvaL"></span><span id="pIva"></span></div>
+        <div class="t"><span>Total</span><span id="pTot"></span></div>
+      </div>
+      <p id="pNotes"></p>
+      <div class="foot">
+        <p>Favor de verificar que la información sea correcta y cumple con lo requerido para completar la compra. Comunicarse por correo a <strong>mchavezguzm@gmail.com</strong> con Manuel Chavez proporcionando sus datos de facturación.</p>
+        <p><strong>GRACIAS POR SU CONFIANZA</strong></p>
+        <p>Los tiempos de entrega pueden variar de acuerdo a disponibilidad. Por favor, revise esta información con el responsable del servicio.</p>
+        <p id="pValid"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'cotizacion-live-v2';
+const money = n => n.toLocaleString('es-MX', {style:'currency', currency:'MXN'});
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const COMPANY = {
+  name: 'CG Services',
+  addr: 'Hdez Covarrubias Mzna 1, Azcapotzalco, CDMX, 02430',
+  tel: '56 13358234',
+  mail: 'mchavezguzm@gmail.com'
+};
+const fields = ['type','valid','client','company','notes'];
+let items = [{d:'', q:1, p:''}];
+let folio = null;
+
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return;
+    fields.forEach(f => { if(s[f] != null) $(f).value = s[f]; });
+    $('iva').checked = s.iva !== false;
+    if(Array.isArray(s.items) && s.items.length) items = s.items;
+    folio = s.folio || null;
+  }catch(e){}
+}
+function save(){
+  try{
+    const s = {items, iva:$('iva').checked, folio};
+    fields.forEach(f => s[f] = $(f).value);
+    localStorage.setItem(KEY, JSON.stringify(s));
+  }catch(e){}
+}
+function nextFolio(){
+  const d = new Date();
+  const n = (parseInt(localStorage.getItem('cotizacion-live-seq')) || 0) + 1;
+  try{ localStorage.setItem('cotizacion-live-seq', n); }catch(e){}
+  return 'CT-' + d.getFullYear() + '-' + String(n).padStart(4,'0');
+}
+
+function renderItems(){
+  $('items').innerHTML = items.map((it,i) => `
+    <div class="item">
+      <input data-i="${i}" data-k="d" placeholder="Descripción" value="${esc(it.d)}">
+      <input data-i="${i}" data-k="q" type="number" min="0" step="any" value="${it.q}">
+      <input data-i="${i}" data-k="p" type="number" min="0" step="0.01" placeholder="0.00" value="${it.p}">
+      <button class="del" data-del="${i}" title="Quitar">×</button>
+    </div>`).join('');
+}
+
+function render(){
+  const iva = $('iva').checked;
+  const sub = items.reduce((a,it) => a + (+it.q||0) * (+it.p||0), 0);
+  const tax = iva ? sub * 0.16 : 0;
+  if(!folio){ folio = nextFolio(); }
+  $('pName').textContent = COMPANY.name;
+  $('pAddr').textContent = COMPANY.addr;
+  $('pContact').textContent = 'Tel: ' + COMPANY.tel + ' · ' + COMPANY.mail;
+  $('pType').textContent = $('type').value;
+  $('pMeta').innerHTML = folio + '<br>' + new Date().toLocaleDateString('es-MX');
+  $('pClient').textContent = $('client').value || '—';
+  $('pCompany').textContent = $('company').value;
+  $('pRows').innerHTML = items.filter(it => it.d || +it.p).map(it => {
+    const q = +it.q||0, p = +it.p||0;
+    return `<tr><td>${esc(it.d)}</td><td class="n">${q}</td><td class="n">${money(p)}</td><td class="n">${money(q*p)}</td></tr>`;
+  }).join('');
+  $('pSub').textContent = money(sub);
+  $('pIvaL').textContent = iva ? 'IVA (16%)' : 'IVA (0%)';
+  $('pIva').textContent = money(tax);
+  $('pTot').textContent = money(sub + tax);
+  $('pNotes').textContent = $('notes').value;
+  const v = +$('valid').value;
+  $('pValid').textContent = $('type').value === 'Cotización' && v ? ' Vigencia de la cotización: ' + v + ' días.' : '';
+  document.title = $('type').value + ' ' + folio;
+  save();
+}
+
+$('items').addEventListener('input', e => {
+  const t = e.target; if(t.dataset.i == null) return;
+  items[+t.dataset.i][t.dataset.k] = t.value; render();
+});
+$('items').addEventListener('click', e => {
+  const i = e.target.dataset.del; if(i == null) return;
+  items.splice(+i, 1); if(!items.length) items.push({d:'',q:1,p:''});
+  renderItems(); render();
+});
+$('add').onclick = () => { items.push({d:'',q:1,p:''}); renderItems(); render();
+  const l = $('items').querySelectorAll('input[data-k="d"]'); l[l.length-1].focus(); };
+$('reset').onclick = () => {
+  if(!confirm('¿Empezar un documento nuevo? Se borrarán los datos del cliente y conceptos.')) return;
+  ['client','company','notes'].forEach(f => $(f).value = '');
+  items = [{d:'',q:1,p:''}]; folio = null; renderItems(); render();
+};
+[...fields, 'iva'].forEach(f => $(f).addEventListener('input', render));
+
+load(); renderItems(); render();
+</script>
+</body>
+</html>
